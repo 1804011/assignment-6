@@ -1,0 +1,32 @@
+* {
+	box-sizing: border-box;
+	margin: 0;
+}
+#search {
+	border: 2px solid black !important;
+	border-radius: 6px;
+	padding-left: 8px;
+}
+#error {
+	color: red;
+	font-size: 12px;
+	font-weight: 600;
+}
+#submit {
+	border-radius: 6px;
+	border: 2px solid tomato;
+	background-color: transparent;
+	font-weight: 600;
+	font-size: 14px;
+	padding: 3px 6px;
+}
+#phone-info {
+	display: flex;
+	flex-wrap: wrap;
+	width: 1100px;
+	justify-content: center;
+	max-width: 95vw;
+}
+#phone-info .card {
+	margin: 16px;
+}
