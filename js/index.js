@@ -7,7 +7,7 @@ const loadData = (url, callBack) => {
 		.then((data) => callBack(data));
 };
 // ===================================
-
+//when submit button is clicked then loadData function fetched data & display it.
 $("submit").addEventListener("click", () => {
 	let searchText = $("search").value;
 	searchText = searchText.toLowerCase().trim();
@@ -17,7 +17,8 @@ $("submit").addEventListener("click", () => {
 		displayPhoneInfo
 	);
 });
-
+// ===============================================
+//Function to display phone info in ui
 const displayPhoneInfo = (phones) => {
 	if (phones.status === false) {
 		$("error").style.display = "block";
@@ -25,7 +26,6 @@ const displayPhoneInfo = (phones) => {
 	} else {
 		$("error").style.display = "none";
 		$("search").style.border = "2px solid black";
-		let sz = phones.data.length;
 		const detailDiv = document.createElement("div");
 		detailDiv.id = "detail-info";
 		detailDiv.classList.add(
@@ -43,65 +43,52 @@ const displayPhoneInfo = (phones) => {
 		$("data").appendChild(div);
 		let cnt = 0;
 		phones.data.forEach((phone) => {
+			const { brand, image, phone_name, slug } = phone;
+			const card = document.createElement("div");
+			card.classList.add("card", "p-4", "shadow-sm", "rounded-3");
+			card.style = "width: 18rem";
+			$("phone-info").appendChild(card);
+			card.innerHTML = `<img src="${image}" class="card-img-top " alt="${phone_name}" />
+		<div class="card-body">
+			<h5 class="card-title text-center">${phone_name}</h5>
+			<p class="card-text text-center">
+			${brand}
+			</p>
+			<button id="${slug}"  class="btn btn-primary mx-auto d-block" >Show details</button>
+		</div>`;
+			$(slug).addEventListener("click", displayDetail);
 			if (cnt < 20) {
-				const { brand, image, phone_name, slug } = phone;
-				const card = document.createElement("div");
-				card.classList.add("card", "p-4", "shadow-sm", "rounded-3");
-				card.style = "width: 18rem";
-				$("phone-info").appendChild(card);
-				card.innerHTML = `<img src="${image}" class="card-img-top " alt="${phone_name}" />
-            <div class="card-body">
-                <h5 class="card-title text-center">${phone_name}</h5>
-                <p class="card-text text-center">
-                ${brand}
-                </p>
-                <button id="${slug}"  class="btn btn-primary mx-auto d-block" >Show details</button>
-            </div>`;
-				$(slug).addEventListener("click", displayDetail);
-			} else if (cnt >= 20) {
-				const { brand, image, phone_name, slug } = phone;
-				const card = document.createElement("div");
-				card.classList.add("card", "p-4", "shadow-sm", "rounded-3");
-				card.style = "width: 18rem";
-				card.style.display = "none";
-				$("phone-info").appendChild(card);
-				card.innerHTML = `<img src="${image}" class="card-img-top " alt="${phone_name}" />
-            <div class="card-body">
-                <h5 class="card-title text-center">${phone_name}</h5>
-                <p class="card-text text-center">
-                ${brand}
-                </p>
-                <button id="${slug}"  class="btn btn-primary mx-auto d-block" >Show details</button>
-            </div>`;
-				$(slug).addEventListener("click", displayDetail);
-				if (cnt == 20) {
-					const button = document.createElement("button");
-					button.id = "load-more";
-					button.classList.add(
-						"btn",
-						"btn-outline-danger",
-						"d-flex",
-						"justify-content-center",
-						"align-items-center",
-						"me-3"
-					);
-					button.style.height = "32px";
-					button.style.alignSelf = "flex-end";
-					button.innerText = "Load more..";
-					$("phone-info").appendChild(button);
-					$("load-more").onclick = () => {
-						const cards = document.getElementsByClassName("card");
-						for (const card of cards) {
-							card.style.display = "block";
-						}
-						$("phone-info").removeChild($("load-more"));
-					};
-				}
+				card.style.display = "block";
+			} else card.style.display = "none";
+			if (cnt == 20) {
+				const button = document.createElement("button");
+				button.id = "load-more";
+				button.classList.add(
+					"btn",
+					"btn-outline-danger",
+					"d-flex",
+					"justify-content-center",
+					"align-items-center",
+					"me-3"
+				);
+				button.style.height = "32px";
+				button.style.alignSelf = "flex-end";
+				button.innerText = "Load more..";
+				$("phone-info").appendChild(button);
+				$("load-more").onclick = () => {
+					const cards = document.getElementsByClassName("card");
+					for (const card of cards) {
+						card.style.display = "block";
+					}
+					$("phone-info").removeChild($("load-more"));
+				};
 			}
 			cnt++;
 		});
 	}
 };
+// ===========================
+// functions to display detail information on ui
 const displayDetail = (event) => {
 	loadData(
 		`https://openapi.programming-hero.com/api/phone/${event.target.id}`,
@@ -163,6 +150,4 @@ const displayDetail = (event) => {
 		}
 	);
 };
-const displayAll = () => {
-	$("phone-info").textContent = "";
-};
+// ==========================================
