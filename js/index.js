@@ -58,21 +58,45 @@ const displayPhoneInfo = (phones) => {
                 <button id="${slug}"  class="btn btn-primary mx-auto d-block" >Show details</button>
             </div>`;
 				$(slug).addEventListener("click", displayDetail);
-			} else if (cnt === 20) {
-				const button = document.createElement("button");
-				button.id = "load-more";
-				button.classList.add(
-					"btn",
-					"btn-outline-danger",
-					"d-flex",
-					"justify-content-center",
-					"align-items-center",
-					"me-3"
-				);
-				button.style.height = "32px";
-				button.style.alignSelf = "flex-end";
-				button.innerText = "Load more..";
-				$("phone-info").appendChild(button);
+			} else if (cnt >= 20) {
+				const { brand, image, phone_name, slug } = phone;
+				const card = document.createElement("div");
+				card.classList.add("card", "p-4", "shadow-sm", "rounded-3");
+				card.style = "width: 18rem";
+				card.style.display = "none";
+				$("phone-info").appendChild(card);
+				card.innerHTML = `<img src="${image}" class="card-img-top " alt="${phone_name}" />
+            <div class="card-body">
+                <h5 class="card-title text-center">${phone_name}</h5>
+                <p class="card-text text-center">
+                ${brand}
+                </p>
+                <button id="${slug}"  class="btn btn-primary mx-auto d-block" >Show details</button>
+            </div>`;
+				$(slug).addEventListener("click", displayDetail);
+				if (cnt == 20) {
+					const button = document.createElement("button");
+					button.id = "load-more";
+					button.classList.add(
+						"btn",
+						"btn-outline-danger",
+						"d-flex",
+						"justify-content-center",
+						"align-items-center",
+						"me-3"
+					);
+					button.style.height = "32px";
+					button.style.alignSelf = "flex-end";
+					button.innerText = "Load more..";
+					$("phone-info").appendChild(button);
+					$("load-more").onclick = () => {
+						const cards = document.getElementsByClassName("card");
+						for (const card of cards) {
+							card.style.display = "block";
+						}
+						$("phone-info").removeChild($("load-more"));
+					};
+				}
 			}
 			cnt++;
 		});
@@ -138,4 +162,7 @@ const displayDetail = (event) => {
 			}
 		}
 	);
+};
+const displayAll = () => {
+	$("phone-info").textContent = "";
 };
